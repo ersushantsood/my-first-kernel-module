@@ -52,3 +52,4 @@ sudo journalctl -since "1 hour ago" | grep kernel
 
 References
 [Linux programming guide](https://sysprog21.github.io/lkmpg/)
+[Linux source tree Makefile](https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/char/Makefile)
