@@ -50,3 +50,5 @@ list journalctl logs to check the logs of the kernel module
 sudo journalctl -since "1 hour ago" | grep kernel
 ```
 
+References
+[Linux programming guide](https://sysprog21.github.io/lkmpg/)
