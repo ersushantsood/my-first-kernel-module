@@ -43,3 +43,10 @@ Remove the kernel module from the kernel
 ```bash
 sudo rmmod firstKernelModule.ko
 ```
+
+list journalctl logs to check the logs of the kernel module 
+
+```bash
+sudo journalctl -since "1 hour ago" | grep kernel
+```
+
