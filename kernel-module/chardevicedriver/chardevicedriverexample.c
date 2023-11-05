@@ -43,9 +43,9 @@ static char msg[BUF_LEN + 1]; /* The msg the device will give when asked */
 
 static struct class *cls;
 
-/*function pointers read,write,open,release in file_operations struct 
-* pointing to mychardev driver functions device_read, device_write,
-* device_open, device_release*/
+/*function pointers read,write,open,release in file_operations struct called
+* by kernel syscall read,write,open,release pointing to mychardev driver functions 
+*device_read, device_write,device_open, device_release */
 static struct file_operations mychardev_fops = {
     .read = device_read,
     .write = device_write,
