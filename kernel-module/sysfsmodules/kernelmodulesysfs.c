@@ -87,4 +87,15 @@ Set the value of myvariable and check that it changed.
     cat /sys/kernel/mymodule/myvariable
 Finally, remove the test module:
     sudo rmmod hello_sysfs
+
+In the above case, we use a simple kobject to create a directory under
+sysfs, and communicate with its attributes. Since Linux v2.6.0, the kobject
+
+structure made its appearance. It was initially meant as a simple way of uni-
+fying kernel code which manages reference counted objects. After a bit of
+
+mission creep, it is now the glue that holds much of the device model and
+its sysfs interface together. For more information about kobject and sysfs,
+see Documentation/driver-api/driver-model/driver.rst and https://lwn.net/
+Articles/51437/.
 */
