@@ -56,7 +56,7 @@ cr0 register (could be Intel specific)
 
 #else
 
-#if defined(CONFIG_KPROBES)
+#if defined(CONFIG_KPROBES) // configure Kprobes starts
 #define HAVE_KPROBES 1
 #include <linux/kprobes.h>
 #else
@@ -67,3 +67,60 @@ cr0 register (could be Intel specific)
  * without CONFIG_KPROBES, you can input the parameter or the module will look
  * up all the memory.
  */
+
+static unsigned long sym = 0;
+module_param(sym, ulong, 0644);
+#endif // configure Kprobes ends
+
+#endif // version check < v5.7 ends
+
+static unsigned long **sys_call_table;
+
+/* UID we want to spy on - will be filled from the command line. */
+static uid_t uid = -1;
+module_param(uid, int, 0644);
+
+/* A pointer to the original system call. The reason we keep this, rather
+ * than call the original function (sys_openat), is because somebody else
+ *might have replaced the system call before us. Note that this is not
+ * 100% safe, because if another module replaced sys_openat before us,
+ * then when we are inserted, we will call the function in that module -
+ * and it might be removed before we are.
+ *
+ * Another reason for this is that we can not get sys_openat.
+ * It is a static variable, so it is not exported.
+ */
+#ifdef CONFIG_ARCH_HAS_SYSCALL_WRAPPER
+static asmlinkage long (*original_call)(const struct pt_regs *);
+#else
+static asmlinkage long (*original_call)(int, const char __user *, int, umode_t);
+#endif
+
+/* The function we will replace sys_openat (the function called when you
+ * call the open system call) with. To find the exact prototype, with
+ * the number and type of arguments, we find the original function first
+ * (it is at fs/open.c).
+ *
+ * In theory, this means that we are tied to the current version of the
+ * kernel. In practice, the system calls almost never change (it would
+ * wreck havoc and require programs to be recompiled, since the system
+ * calls are the interface between the kernel and the processes).
+ */
+#ifdef CONFIG_ARCH_HAS_SYSCALL_WRAPPER
+static asmlinkage long our_sys_openat(const struct pt_regs *regs)
+#else
+static asmlinkage long our_sys_openat(int dfd, const char __user *filename,
+                                      int flags, umode_t mode)
+#endif
+{
+    int i = 0;
+    char ch;
+
+    if(__kuid_val(current_uid()) != uid)
+        goto orig_call
+    
+    /* Report the file, if relevant */
+    pr_info("Opened file by %d: ", uid);
+    do {
+    }
+}
