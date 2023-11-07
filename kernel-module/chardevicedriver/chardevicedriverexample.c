@@ -2,6 +2,11 @@
 * chardevicedriverexample.c Creates a read only char device that says how many times
 * you have read from the dev file.
 * NOTE: kernel modules requires Tabs and not spaces in indentation.
+
+* Different filesystems like /proc /dev have different function pointers structs. Based on which filesystem one need to 
+  create file handles/file descriptors in , would register their read/write functions/hooks to those function pointers
+  structs. In this case, as we are trying to read or write in /dev , we are using file operations struct. For /proc, we will
+  use proc ops struct (in other examples) 
 */
 
 #include <linux/atomic.h>
